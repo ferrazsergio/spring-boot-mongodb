@@ -1,6 +1,7 @@
 package com.ferrazsergio.springmongo.services;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,24 @@ public class UserService {
 	public void deleteById(String id) {
 		findById(id);
 		userRepository.deleteById(id);
+	}
+	
+	public User update(User newObj) {
+		try {
+			Optional<User> newUser = userRepository.findById(newObj.getId());
+			User user = newUser.get();
+			updateData(user, newObj);
+			return userRepository.save(user);
+		} catch (NoSuchElementException e) {
+			throw new ObjectNotFoundException("Object not found.", newObj);
+		}
+	}
+	
+	// AUXILIAR METHOD FOR USER UPDATE
+	private void updateData(User user, User newObj) {
+		user.setName(newObj.getName());
+		user.setEmail(newObj.getEmail());
+		
 	}
 
 	public User fromDTO(UserDTO objDto) {

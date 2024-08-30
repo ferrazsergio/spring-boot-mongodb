@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -75,5 +76,20 @@ public class UserResource {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	    }
 	}
+	
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<Void> update(@RequestBody UserDTO userDto, @PathVariable String id) {
+	    try {
+	        User obj = userService.fromDTO(userDto); // Converte DTO para entidade
+	        obj.setId(id); // Define o ID para garantir que o objeto correto será atualizado
+	        userService.update(obj); // Atualiza o objeto no banco de dados
+	        return ResponseEntity.noContent().build(); // Retorna 204 No Content se bem-sucedido
+	    } catch (ObjectNotFoundException e) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Retorna 404 se o objeto não for encontrado
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Retorna 500 se houver outro erro
+	    }
+	}
+
 
 }
