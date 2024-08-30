@@ -4,7 +4,9 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.ferrazsergio.springmongo.domain.User;
 import com.ferrazsergio.springmongo.dto.UserDTO;
 import com.ferrazsergio.springmongo.services.UserService;
+import com.ferrazsergio.springmongo.services.exception.ObjectNotFoundException;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -59,5 +62,17 @@ public class UserResource {
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(null); 
 		}
+	}
+	
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<UserDTO> deleteUser(@PathVariable String id) {
+	    try {
+	        User obj = userService.deleteById(id);
+	        return ResponseEntity.ok().body(new UserDTO(obj));
+	    } catch (ObjectNotFoundException e) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+	    }
 	}
 }
