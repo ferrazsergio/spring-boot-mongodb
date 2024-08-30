@@ -65,14 +65,15 @@ public class UserResource {
 	}
 	
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<UserDTO> deleteUser(@PathVariable String id) {
+	public ResponseEntity<Void> deleteUser(@PathVariable String id) {
 	    try {
-	        User obj = userService.deleteById(id);
-	        return ResponseEntity.ok().body(new UserDTO(obj));
+	        userService.deleteById(id);
+	        return ResponseEntity.noContent().build();
 	    } catch (ObjectNotFoundException e) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	    } catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	    }
 	}
+
 }

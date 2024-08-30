@@ -36,14 +36,9 @@ public class UserService {
 		return userRepository.insert(obj);
 	}
 	
-	public User deleteById(String id) {
-	    Optional<User> obj = userRepository.findById(id);
-	    if (obj.isPresent()) {
-	        userRepository.deleteById(id);
-	        return obj.get();
-	    } else {
-	        throw new ObjectNotFoundException("User with ID " + id + " not found", id);
-	    }
+	public void deleteById(String id) {
+		findById(id);
+		userRepository.deleteById(id);
 	}
 
 	public User fromDTO(UserDTO objDto) {
