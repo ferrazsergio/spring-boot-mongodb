@@ -18,14 +18,13 @@ public class User implements Serializable {
 	private String id;
 	private String name;
 	private String email;
-	
+
 	@DBRef(lazy = true)
 	private List<Post> posts = new ArrayList<>();
-	
+
 	public User() {
 		super();
 	}
-
 
 	public User(String id, String name, String email) {
 		super();
@@ -34,52 +33,44 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-
 	public String getId() {
 		return id;
 	}
-
 
 	public void setId(String id) {
 		this.id = id;
 	}
 
-
 	public String getName() {
 		return name;
 	}
-
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-
 	public String getEmail() {
 		return email;
 	}
-
 
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
-
 	public List<Post> getPosts() {
 		return posts;
 	}
 
-
-	public void setPosts(List<Post> posts) {
-		this.posts = posts;
+	public void addPosts(List<Post> postsToAdd) {
+		if (postsToAdd != null) {
+			this.posts.addAll(postsToAdd);
+		}
 	}
-
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -92,6 +83,5 @@ public class User implements Serializable {
 		User other = (User) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
+
 }

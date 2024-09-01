@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.ferrazsergio.springmongo.domain.Post;
 import com.ferrazsergio.springmongo.domain.User;
+import com.ferrazsergio.springmongo.dto.PostDTO;
 import com.ferrazsergio.springmongo.dto.UserDTO;
 import com.ferrazsergio.springmongo.services.UserService;
 import com.ferrazsergio.springmongo.services.exception.ObjectNotFoundException;
@@ -36,7 +38,7 @@ public class UserResource {
 	public ResponseEntity<List<UserDTO>> findAll() {
 		try {
 			List<User> list = userService.findAll();
-			List<UserDTO> listDto = list.stream().map(user -> new UserDTO(user)).toList();
+			List<UserDTO> listDto = list.stream().map(UserDTO::new).toList();
 			return ResponseEntity.ok().body(listDto);
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(null); 
@@ -90,6 +92,19 @@ public class UserResource {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Retorna 500 se houver outro erro
 	    }
 	}
+	
+	@GetMapping(value = "/{id}/posts")
+	public ResponseEntity<List<PostDTO>> findPosts(@PathVariable String id) {
+	    try {
+	        User obj = userService.findById(id);
+	        List<Post> posts = obj.getPosts(); // Recupera os posts do usuário
+	        List<PostDTO> postDTOs = posts.stream().map(PostDTO::new).toList(); // Converte os posts para DTOs
+	        return ResponseEntity.ok().body(postDTOs);
+	    } catch (Exception e) {
+	        return ResponseEntity.status(500).body(null); 
+	    }
+	}
+
 
 
 }
