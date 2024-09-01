@@ -1,13 +1,16 @@
 package com.ferrazsergio.springmongo.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.ferrazsergio.springmongo.dto.AuthorDTO;
+import com.ferrazsergio.springmongo.dto.CommentDTO;
 
 @Document
 public class Post implements Serializable{
@@ -20,7 +23,10 @@ public class Post implements Serializable{
 	private String title;
 	private String body;
 	private AuthorDTO author;
+	private List<CommentDTO> commentDto = new ArrayList<>();
 	
+	
+
 	public Post() {
 		
 	}
@@ -84,13 +90,22 @@ public class Post implements Serializable{
 		this.author = author;
 	}
 	
+	public List<CommentDTO> getCommentDto() {
+		return commentDto;
+	}
+	
+	public void addComments(List <CommentDTO> comments) {
+		if (comments != null) {
+			this.commentDto.addAll(comments);
+		}
+	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
 	}
 
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
